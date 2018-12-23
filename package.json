@@ -1,0 +1,25 @@
+{
+  "name": "book_app",
+  "version": "1.0.0",
+  "description": "Search the Google Books API for titles, and store them on a virtual bookshelf",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lyoncodes/book_app.git"
+  },
+  "author": "MeanxKiddo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lyoncodes/book_app/issues"
+  },
+  "homepage": "https://github.com/lyoncodes/book_app#readme",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "pg": "^7.7.1"
+  }
+}
