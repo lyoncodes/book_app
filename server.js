@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 3000
 app.use(express.urlencoded({extended: true}))
 app.use(express.static('./public'));
 
+
 // Database Setup
 const client = new pg.Client('postgres://localhost:5432/books_app')
 client.connect()
@@ -23,6 +24,7 @@ app.set('view engine', 'ejs')
 // Home Route
 app.get('/', (req, res) => {
   res.render('pages/index', {
+
     hello: 'World'
   });
 });
