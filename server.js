@@ -10,8 +10,7 @@ const PORT = process.env.PORT || 3000
 
 // Parse request.body
 app.use(express.urlencoded({extended: true}))
-app.use(express.static('./public'));
-
+app.use(express.static('./public'))
 
 // Database Setup
 const client = new pg.Client('postgres://localhost:5432/books_app')
@@ -25,7 +24,6 @@ app.set('view engine', 'ejs')
 // Home Route
 app.get('/', (req, res) => {
   res.render('pages/index', {
-
     hello: 'World'
   });
 });
@@ -35,39 +33,46 @@ function handleError(res, error) {
   res.render('pages/error', {err: error})
 }
 
+
 // Search Route
 app.post('/searches', searchBooks)
 
-function searchBooks(req, res) {
-  let URL = `https://www.googleapis.com/books/v1/volumes?q=`;
+function search (req, res) {
   let searchStr = req.body.search[0]
-  let  searchType = req.body.search[1]
-
-  // if (req.body.search[1] === 'title') URL += `+intitle:${req.body.search[0]}&key=${process.env.PORT}`;
-  // if (req.body.search[1] === 'author') URL += `+intitle:${req.body.search[0]}&key=${process.env.PORT}`;
+  let searchType = req.body.search[1]
+  let url = 'https://www.googleapis.com/books/v1/volumes?q=search'
 
   // Search Type conditionals
   if (searchType === 'title') {
-    URL += `+intitle:${searchStr}`
+    url += `+intitle:${searchStr}`
   } else if (searchType === 'author') {
-    URL += `inauthor:${searchStr}`
+    url += `inauthor:${searchStr}`
   }
-  superagent.get(URL)
+  // Superagent Request
+  return superagent.get(url)
     .then(result => {
+      // console.log(result)
       let books = result.body.items.map(book => new Book(book))
-      if(result.body.items) {
-        for(var i = 0; i <=10; i++){
-          books.push(new Book(result.body.items[i]))
-        }
-
-        res.render('pages/searches/show', {books})
-      } else {
-        handleError(res);
-      }
+      res.render('pages/books/show', {books})
     })
-    .catch(err => handleError(res, req));
+}
+// Book Constructor
+function Book (obj) {
+  console.log(obj)
+  this.title = obj.volumeInfo.title ? obj.volumeInfo.title : 'No Title Available'
+  this.author = obj.volumeInfo.authors ? obj.volumeInfo.authors.join(',') : 'Unknown'
+  this.discription = obj.volumeInfo.discription ? obj.volumeInfo.discription : 'No discription available'
+  this.image_url = obj.volumeInfo.imageLinks.thumbnail || 'https://i.imgur.com/J5LVHEL.jpeg'
+  this.isbn = obj.volumeInfo.industryIndentifiers ? obj.volumeInfo.industryIndentifiers[0].indentifier : ''
 }
 
+Book.lookupBook = (book) => {
+  // SQL query
+  // superagent req.
+}
+Book.prototype = {
+  // Save in psql database
+}
 // Localhost listener
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
 
