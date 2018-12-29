@@ -45,5 +45,7 @@ CREATE TABLE books (<br>
 
 01-01-2001 4:59pm - Application now has a fully-functional express server, with GET and POST routes for the book resource.
 
+Feature 1: 1 hour expected, 2 hours taken. file paths on the includes function
+Feature 2: 20 mins expected, 3 mins taken. styling and endpoint.
 ## Credits and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
