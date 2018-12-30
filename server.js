@@ -32,9 +32,10 @@ app.get('/', (req, res) => {
 app.post('/searches', search)
 
 function search (req, res) {
+  console.log(req)
   let searchStr = req.body.search[0]
   let searchType = req.body.search[1]
-  let url = 'https://www.googleapis.com/books/v1/volumes?q=search'
+  let url = 'https://www.googleapis.com/books/v1/volumes?q='
 
   // Search Type conditionals
   if (searchType === 'title') {
@@ -56,7 +57,7 @@ function Book (obj) {
   this.title = obj.volumeInfo.title ? obj.volumeInfo.title : 'No Title Available'
   this.author = obj.volumeInfo.authors ? obj.volumeInfo.authors.join(',') : 'Unknown'
   this.discription = obj.volumeInfo.discription ? obj.volumeInfo.discription : 'No discription available'
-  this.image_url = obj.volumeInfo.imageLinks.thumbnail || 'https://i.imgur.com/J5LVHEL.jpeg'
+  this.image_url = obj.volumeInfo.imageLinks ? obj.volumeInfo.imageLinks.thumbnail : 'https://i.imgur.com/J5LVHEL.jpeg'
   this.isbn = obj.volumeInfo.industryIndentifiers ? obj.volumeInfo.industryIndentifiers[0].indentifier : ''
 }
 
