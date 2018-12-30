@@ -33,7 +33,6 @@ function handleError(res, error) {
   res.render('pages/error', {err: error})
 }
 
-
 // Search Route
 app.post('/searches', search)
 
@@ -63,11 +62,7 @@ function Book (obj) {
   console.log(obj)
   this.title = obj.volumeInfo.title ? obj.volumeInfo.title : 'No Title Available'
   this.author = obj.volumeInfo.authors ? obj.volumeInfo.authors.join(',') : 'Unknown'
-<<<<<<< HEAD
-  this.discription = obj.volumeInfo.discription ? obj.volumeInfo.discription : 'No discription available'
-=======
   this.description = obj.volumeInfo.description ? obj.volumeInfo.description : 'No description available'
->>>>>>> 5ac827734fc0108552c427c4dadadd50f09f207a
   this.image_url = obj.volumeInfo.imageLinks ? obj.volumeInfo.imageLinks.thumbnail : 'https://i.imgur.com/J5LVHEL.jpeg'
   this.isbn = obj.volumeInfo.industryIndentifiers ? obj.volumeInfo.industryIndentifiers[0].indentifier : ''
 }
@@ -81,7 +76,6 @@ Book.prototype = {
 }
 // Localhost listener
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
-
 
 // // Book Constructor
 
