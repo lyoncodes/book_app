@@ -13,7 +13,6 @@ body {
   }
 }
 
-
 h3{
   color: #ffffff;
 
@@ -21,10 +20,13 @@ h3{
 
 h4 {
   color: #000000;
+  font-family: 'Thasadith', sans-serif;
+  font-family: 'Staatliches', cursive;
 }
 
 p{
   text-align: justify;
+  color: #4d4b4b;
 
 }
 
@@ -93,5 +95,21 @@ li {
   margin-bottom: 10px;
   padding: 10px;
   background-color: #c2c2c2;
+  font-family: 'Thasadith', sans-serif;
 
+}
+
+.icon-facebook:before {
+  content: "\e900";
+  color: #3b5998;
+}
+
+.icon-twitter:before {
+  content: "\e902";
+  color: #1da1f2;
+}
+
+.icon-linkedin:before {
+  content: "\e901";
+  color: #0077b5;
 }
