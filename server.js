@@ -33,11 +33,11 @@ function handleError(res, error) {
   res.render('pages/error', {err: error})
 }
 
-
 // Search Route
 app.post('/searches', search)
 
 function search (req, res) {
+  console.log(req)
   let searchStr = req.body.search[0]
   let searchType = req.body.search[1]
   let url = 'https://www.googleapis.com/books/v1/volumes?q='
