@@ -4,6 +4,8 @@ const express = require('express')
 const pg = require('pg')
 const superagent = require('superagent')
 
+require ('dotenv').config()
+
 // Applicatoin Setup
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -13,28 +15,41 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.static('./public'))
 
 // Database Setup
-const client = new pg.Client('postgres://localhost:5432/books_app')
+const client = new pg.Client(process.env.DATABASE_URL)
 client.connect()
 client.on('error', err => console.error(err))
 
 // Set the view engine for server-side templating
 app.set('view engine', 'ejs')
 
-// Routes
-// Home Route
-app.get('/', (req, res) => {
-  res.render('pages/index', {
-    hello: 'World'
-  });
-});
 
-function handleError(res, error) {
-  console.log(error);
-  res.render('pages/error', {err: error})
-}
 
 // Search Route
-app.post('/searches', search)
+app.get('/', home);
+app.get('/books/:id', renderBook);
+app.post('/book', saveBook);
+app.get('/new', newSearch);
+
+app.post('/searches', search);
+
+// Home Route
+function home(req, res){
+  const SQL = 'SELECT * FROM books';
+
+  return client.query(SQL)
+    .then(data => {
+      res.render('pages/index', {books: data.rows});
+    })
+    .catch(err => {
+      console.log(err);
+      res.render('pages/error', {err});
+    });
+}
+
+function newSearch(req, res){
+  res.render('pages/searches/new.ejs');
+}
+
 
 function search (req, res) {
   console.log(req)
@@ -58,7 +73,39 @@ function search (req, res) {
     })
 }
 
+
+function renderBook(req,res){
+  let SQL = `SELECT * FROM books WHERE id=$1`;
+  let values = [req.params.id];
+  return client.query(SQL, values)
+    .then(result => {
+      console.log('Retrieve from DB');
+      res.render('pages/books/show', {book: result.rows[0]});
+    })
+    .catch(err => handleError(err, res));
+}
+
 // Save Books
+function saveBook(req, res){
+  let SQL = `INSERT INTO books
+  (author, title, isbn, image_url, description,bookshelf)
+  VALUES($1,$2,$3,$4,$5,$6)`;
+  let values = (SQL, [req.body.author, req.body.title, req.body.isbn, req.body.image_url, req.body.description, req.body.bookshelf]);
+
+  return client.query(SQL, values)
+    .then(result => {
+      let SQL = 'SELECT id FROM books WHERE isbn=$1';
+      let values = [req.body.isbn];
+
+  return client.query(SQL, values)
+      .then(result => {
+        res.redirect(`/books/${result.rows[0].id}`);
+      })
+      .catch(err => handleError(err, res));
+    })
+    .catch(err => handleError(err, res));
+}
+
 
 
 // Book Constructor
@@ -71,12 +118,12 @@ function Book (obj) {
   this.isbn = obj.volumeInfo.industryIndentifiers ? obj.volumeInfo.industryIndentifiers[0].indentifier : 'ISBN not provided'
 }
 
-Book.lookupBook = (book) => {
-  // SQL query
-  // superagent req.
+//Error handle
+function handleError(err, res) {
+  console.log(err);
+  if (res) res.status(500).render('pages/error');
 }
-Book.prototype = {
-  // Save in psql database
-}
+
+
 // Localhost listener
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
