@@ -10,10 +10,8 @@
         <%- include('./detail', {book: book}); %> 
     </main>
 
-  <h1>Thank you for your search</h1>
-
-  <ul>
-    <% books.forEach(book => { %>
+  <!-- <ul>
+    <%=book.id %>
       <li>
         <h3><%= book.title %></h3>
         <img src=<%=book.image_url %>>
@@ -22,11 +20,11 @@
           <p><%= book.description %></p>
            <p> ISBN: <% book.isbn %></p>
           <p> Bookshelf: <%= book.bookshelf %></p> 
-          <form action="/book" method="POST">
+          <form action="/book" method="post">
             <input type="hidden" value"<%= book.title %>" name
           </form>
       </li>
-    <% }) %>
-  </ul>
+  </ul> -->
+  <%- include('../../layout/footer') %>
 </body>
 </html>
