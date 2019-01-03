@@ -27,7 +27,7 @@ app.set('view engine', 'ejs')
 // Search Route
 app.get('/', home);
 app.get('/books/:id', renderBook);
-app.post('/book', saveBook);
+app.post('/books', saveBook);
 app.get('/new', newSearch);
 
 app.post('/searches', search);
@@ -79,8 +79,18 @@ function renderBook(req,res){
   let values = [req.params.id];
   return client.query(SQL, values)
     .then(result => {
-      console.log('Retrieve from DB');
-      res.render('pages/books/show', {book: result.rows[0]});
+      const book = result.rows[0];
+      return client.query('SELECT DISTINCT bookshelf FROM books')
+        .then(bookshelfData => {
+          const bookshelf = bookshelfData.rows;
+          res.render('pages/books/show', {
+            book: book,
+            bookshelf: bookshelf,
+          });
+        })
+        .catch(err => handleError(err, res));
+      // console.log('Retrieve from DB');
+      // res.render('pages/books/show', {book: result.rows[0]});
     })
     .catch(err => handleError(err, res));
 }
@@ -95,7 +105,7 @@ function saveBook(req, res){
   return client.query(SQL, values)
     .then(result => {
       let SQL = 'SELECT id FROM books WHERE isbn=$1';
-      let values = [req.body.isbn];
+      let values = [req.body.title];
 
   return client.query(SQL, values)
       .then(result => {
