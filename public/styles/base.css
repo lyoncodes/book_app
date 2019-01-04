@@ -5,6 +5,7 @@
 
 body {
   background-color: #808080;
+  width: 100%;
 }
 
 @media screen and (max-width: 480px) {

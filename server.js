@@ -27,7 +27,7 @@ app.set('view engine', 'ejs')
 // Search Route
 app.get('/', home);
 app.get('/books/:id', renderBook);
-app.post('/books', saveBook);
+app.post('/save', saveBook);
 app.get('/new', newSearch);
 
 app.post('/searches', search);
@@ -98,14 +98,14 @@ function renderBook(req,res){
 // Save Books
 function saveBook(req, res){
   let SQL = `INSERT INTO books
-  (author, title, isbn, image_url, description,bookshelf)
+  (author, title, isbn, image_url, description, bookshelf)
   VALUES($1,$2,$3,$4,$5,$6)`;
   let values = (SQL, [req.body.author, req.body.title, req.body.isbn, req.body.image_url, req.body.description, req.body.bookshelf]);
 
   return client.query(SQL, values)
     .then(result => {
       let SQL = 'SELECT id FROM books WHERE isbn=$1';
-      let values = [req.body.title];
+      let values = [req.body.isbn];
 
   return client.query(SQL, values)
       .then(result => {
