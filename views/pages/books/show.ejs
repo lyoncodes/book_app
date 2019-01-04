@@ -7,24 +7,17 @@
     <%- include('../../layout/header.ejs'); %> 
 
     <main>
-        <%- include('./detail', {book: book}); %> 
+      <!-- <h1>Test</h1> -->
+         <%- include('./detail', {book: book}); %>  
     </main>
 
-  <!-- <ul>
-    <%=book.id %>
-      <li>
-        <h3><%= book.title %></h3>
-        <img src=<%=book.image_url %>>
-        <h3><%= book.title %></h3>
-          <h4><%= book.author %></h4>
-          <p><%= book.description %></p>
-           <p> ISBN: <% book.isbn %></p>
-          <p> Bookshelf: <%= book.bookshelf %></p> 
-          <form action="/book" method="post">
-            <input type="hidden" value"<%= book.title %>" name
-          </form>
-      </li>
-  </ul> -->
   <%- include('../../layout/footer') %>
+
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <script src="/js/app.js"></script>
 </body>
+
 </html>
