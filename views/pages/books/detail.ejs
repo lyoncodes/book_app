@@ -1,12 +1,12 @@
-<%- include('../../layout/head.ejs'); %>
-
-<%- include('../../layout/header.ejs'); %> 
-   
-   <section class="detail">
+    <section class="detail">
      <img src=<%=book.image_url %>>
       <h3><%= book.title %></h3>
         <h4><%= book.author %></h4>
         <p><%= book.description %></p>
-        <p> ISBN: <% book.isbn %></p>
+        <p> ISBN: <%= book.isbn %></p>
         <p> Bookshelf: <%= book.bookshelf %></p> 
+
+        <button id="show-form">Update details</button>
    </section>
+
+   <%- include('edit', {book: book}) %>

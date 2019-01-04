@@ -27,8 +27,10 @@ app.set('view engine', 'ejs')
 // Search Route
 app.get('/', home);
 app.get('/books/:id', renderBook);
+app.post('/books/:id', renderBook);
 app.post('/save', saveBook);
 app.get('/new', newSearch);
+app.get('/update/:id', updateBooks);
 
 app.post('/searches', search);
 
@@ -77,20 +79,22 @@ function search (req, res) {
 function renderBook(req,res){
   let SQL = `SELECT * FROM books WHERE id=$1`;
   let values = [req.params.id];
+  // console.log(values);
   return client.query(SQL, values)
     .then(result => {
       const book = result.rows[0];
+      // console.log(book);
       return client.query('SELECT DISTINCT bookshelf FROM books')
         .then(bookshelfData => {
           const bookshelf = bookshelfData.rows;
-          res.render('pages/books/show', {
+          console.log(bookshelf);
+          return res.render('pages/books/show', {
             book: book,
             bookshelf: bookshelf,
           });
+          // console.log(res);
         })
         .catch(err => handleError(err, res));
-      // console.log('Retrieve from DB');
-      // res.render('pages/books/show', {book: result.rows[0]});
     })
     .catch(err => handleError(err, res));
 }
@@ -112,6 +116,19 @@ function saveBook(req, res){
         res.redirect(`/books/${result.rows[0].id}`);
       })
       .catch(err => handleError(err, res));
+    })
+    .catch(err => handleError(err, res));
+}
+
+function updateBooks(req, res){
+  let SQL = `INSERT INTO books
+            (author, title, isbn, image_url, description, bookshelf)
+            VALUES($1,$2,$3,$4,$5,$6)`;
+  let values = (SQL, [req.params.id, req.body.author, req.body.title, req.body.isbn, req.body.image_url, req.body.description, req.body.bookshelf]);
+
+  return client.query(SQL, values)
+    .then(results => {
+      res.redirect(`/books/${req.params.id}`);
     })
     .catch(err => handleError(err, res));
 }
