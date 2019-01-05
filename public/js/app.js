@@ -5,13 +5,17 @@ $(document).ready(function() {
 		$("nav.menu").toggleClass("menu_show");
   });
   
-  $('form').hide();
-  $('#show-form').on('click', function(e) {
+   $('form').hide();
+  $('.show-form').on('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
 
+
+    let showSingleForm = "." + $(this).val();
     console.log($(e.target).parent());
-    $(e.target).parent().hide();
-    $('form').show();
-  })
+    $(this).hide();
+    $(`${showSingleForm}`).show();
+  });
+
+  
 });

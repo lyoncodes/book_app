@@ -10,6 +10,7 @@
   <main>
 
   <ul>
+      <% let j = 0; %>
       <% books.forEach(book => { %>
         
         <li>
@@ -18,28 +19,30 @@
           <h4><%= book.author %></h4>
           <p><%= book.description %></p>
           <!-- <p> ISBN: <% book.isbn %></p> -->
-          <form action="/books" method="post">
-          <button class="select-book" name="select">Select this Book</button>
-          </form>
+          
+          <button class="show-form" name="select" value="<%= j %>">Select this Book</button>
+          
           <!-- <p> Bookshelf: <%= book.bookshelf %></p>
-          <button><a href="/details/<%=book.id%>">View Details</a> </button> -->
+            <button><a href="/new/<%=book.id%>">Select this Book</a> </button> -->
+            <form class="<%=j%>" action="/save" method="post">
+              <input name="title" class="text-input" type="text" name="search" value="<%= book.title %>" required>
+              <input name="author" class="text-input" type="text" name="search" value="<%= book.author %>" required>
+              <input name="isbn" class="text-input" type="text" name="search" value="<%= book.isbn %>" required>
+              <input name="image_url" class="text-input" type="text" name="search" value="<%= book.image_url %>" required>
+              <textarea name="description" class="text-input" type="text" cols="30" rows="10" required><%= book.description %></textarea>
+              <input name="bookshelf" class="text-input" type="text" name="search" placeholder="Enter bookshelf name" required>
+              <!-- <input id="add-form-submit" type="submit">Add to Database</input> -->
+              <button id="add-form-submit" type="submit">Add to Database</button>
+              
+            </form>
         </li>
-        <section>
-          <form action="/save" method="post">
-            <input name="title" class="text-input" type="hidden" name="search" value="<%= book.title %>" required>
-            <input name="author" class="text-input" type="hidden" name="search" value="<%= book.author %>" required>
-            <input name="isbn" class="text-input" type="hidden" name="search" value="<%= book.isbn %>" required>
-            <input name="image_url" class="text-input" type="hidden" name="search" value="<%= book.image_url %>" required>
-            <textarea name="description" class="text-input" type="hidden" cols="30" rows="10" required><%= book.description %></textarea>
-            <input name="bookshelf" class="text-input" type="hidden" name="search" placeholder="Enter bookshelf name" required>
-            <button id="add-form-submit" type="submit">Add to Database</button>
-          </form>
-        </section>
+       
+        <% j++ %>
       <% }) %>
+
     </ul>
   </main>
 
   <%- include('../../layout/footer') %>
 </body>
 </html>
-

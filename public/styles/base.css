@@ -89,14 +89,18 @@ h6 {
   text-align: center;
 }
 
- .radio {
+  .radio {
   width: 60%; 
   display: flex;
   margin: auto;
   flex-direction: column;
   padding: 8px;
   
-} 
+}  
+
+.inline-block {
+  display: inline-block;
+}
 
 .detail {
   font-size: 25px;
@@ -187,16 +191,12 @@ nav.menu > a {
 	}
 }
 
-form {
+.detail-form {
   text-align: center;
-  /* display: flex;
-  align-content: flex-start; */
-
 }
 
-input, textarea {
-  display: block;
+ input, textarea {
+  display: inline-block;
   width: 50%;
   margin: 20px auto;
-
-}
+} 

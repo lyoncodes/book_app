@@ -3,6 +3,7 @@
 const express = require('express')
 const pg = require('pg')
 const superagent = require('superagent')
+const methodOverride = require('method-override')
 
 require ('dotenv').config()
 
@@ -11,8 +12,16 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 // Parse request.body
-app.use(express.urlencoded({extended: true}))
-app.use(express.static('./public'))
+app.use(express.urlencoded({extended: true}));
+app.use(express.static('./public'));
+app.use(methodOverride((req, res) => {
+  if(req.body && typeof req.body === 'object' && '_method' in req.body) {
+    console.log(req.body['_method']);
+    let method = req.body['_method'];
+    delete req.body['_method'];
+    return method; //returns PUT, PATCH, POST, GET, or DELETE.
+  }
+}))
 
 // Database Setup
 const client = new pg.Client(process.env.DATABASE_URL)
@@ -30,7 +39,8 @@ app.get('/books/:id', renderBook);
 app.post('/books/:id', renderBook);
 app.post('/save', saveBook);
 app.get('/new', newSearch);
-app.get('/update/:id', updateBooks);
+app.put('/update/:id', updateBooks);
+app.delete('/books/:id', deleteBook)
 
 app.post('/searches', search);
 
@@ -121,16 +131,28 @@ function saveBook(req, res){
 }
 
 function updateBooks(req, res){
-  let SQL = `INSERT INTO books
-            (author, title, isbn, image_url, description, bookshelf)
-            VALUES($1,$2,$3,$4,$5,$6)`;
-  let values = (SQL, [req.params.id, req.body.author, req.body.title, req.body.isbn, req.body.image_url, req.body.description, req.body.bookshelf]);
+  let SQL = `UPDATE books SET author=$1, title=$2, isbn=$3, image_url=$4, description=$5, bookshelf=$6 WHERE id=$7`;
+            
+  let values = [req.body.author, req.body.title, req.body.isbn, req.body.image_url, req.body.description, req.body.bookshelf, req.params.id];
 
-  return client.query(SQL, values)
+  client.query(SQL, values)
     .then(results => {
       res.redirect(`/books/${req.params.id}`);
     })
     .catch(err => handleError(err, res));
+}
+
+function deleteBook(req, res) {
+  console.log(`deleting the book ${req.params.id}`);
+  client.query(`DELETE FROM books WHERE id=$1`, [req.params.id])
+    .then(result => {
+      console.log(result);
+      Response.redirect('/');
+    })
+    .catch(err => {
+      console.log('delete book error')
+      return handleError(err, res);
+    })
 }
 
 
