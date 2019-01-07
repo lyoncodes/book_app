@@ -11,7 +11,7 @@
         <h2><span><%= books.length %></span>Saved Books</h2>
       </section>
       <main>
-        <ul>
+        <ul class="saved">
           <% books.forEach(book => { %>
             <li data-id="<%= book.id %>">
               <img src=<%= book.image_url %>>
@@ -20,6 +20,11 @@
               <a href="books/<%= book.id %>">
                 <button>View Details</button>
               </a>
+
+              <form action="/books/<%=book.id %>" method="post">
+                <input type="hidden" name="_method" value="DELETE">
+                <input type="submit" value="Remove from bookshelf">
+              </form>
             </li>
           <% }) %>
         </ul>

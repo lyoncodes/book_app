@@ -14,7 +14,12 @@ $(document).ready(function() {
     let showSingleForm = "." + $(this).val();
     console.log($(e.target).parent());
     $(this).hide();
-    $(`${showSingleForm}`).show();
+    if(showSingleForm === "."){
+      $('form').show()
+    } else {
+      $(`${showSingleForm}`).show();
+
+    }
   });
 
   
