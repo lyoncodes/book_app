@@ -46,7 +46,7 @@ app.post('/searches', search);
 
 // Home Route
 function home(req, res){
-  const SQL = 'SELECT * FROM books';
+  let SQL = 'SELECT * FROM books';
 
   return client.query(SQL)
     .then(data => {
@@ -78,7 +78,7 @@ function search (req, res) {
   // Superagent Request
   return superagent.get(url)
     .then(result => {
-      // console.log(result)
+   
       let books = result.body.items.map(book => new Book(book))
       console.log(books)
       res.render('pages/searches/show', {books})
@@ -89,11 +89,11 @@ function search (req, res) {
 function renderBook(req,res){
   let SQL = `SELECT * FROM books WHERE id=$1`;
   let values = [req.params.id];
-  // console.log(values);
+  
   return client.query(SQL, values)
     .then(result => {
       const book = result.rows[0];
-      // console.log(book);
+
       return client.query('SELECT DISTINCT bookshelf FROM books')
         .then(bookshelfData => {
           const bookshelf = bookshelfData.rows;
@@ -102,7 +102,6 @@ function renderBook(req,res){
             book: book,
             bookshelf: bookshelf,
           });
-          // console.log(res);
         })
         .catch(err => handleError(err, res));
     })
@@ -147,7 +146,7 @@ function deleteBook(req, res) {
   client.query(`DELETE FROM books WHERE id=$1`, [req.params.id])
     .then(result => {
       console.log(result);
-      Response.redirect('/');
+      res.redirect('/');
     })
     .catch(err => {
       console.log('delete book error')
